@@ -23,9 +23,9 @@ jobs:
         run: |
           git remote add upstream https://github.com/bitcoinops/bitcoinops.github.io.git
           git fetch upstream
-          git fetch origin main
+          git fetch origin master
 
-      - name: Mirror upstream/main into origin/main
+      - name: Mirror upstream/master into origin/master
         run: |
-          git checkout -B main upstream/main
+          git checkout -B main upstream/master
           git push origin main --force  
