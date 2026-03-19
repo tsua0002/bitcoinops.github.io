@@ -1,0 +1,31 @@
+name: Sync upstream main
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/automation'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout automation branch
+        uses: actions/checkout@v4
+        with:
+          ref: automation
+          fetch-depth: 0
+
+      - name: Configure remotes
+        run: |
+          git remote add upstream https://github.com/bitcoinops/bitcoinops.github.io.git
+          git fetch upstream
+          git fetch origin main
+
+      - name: Mirror upstream/main into origin/main
+        run: |
+          git checkout -B main upstream/main
+          git push origin main --force  
