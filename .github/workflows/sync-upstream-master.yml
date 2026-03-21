@@ -1,4 +1,4 @@
-name: Sync upstream main
+name: Sync upstream master and main
 
 on:
   schedule:
@@ -25,7 +25,9 @@ jobs:
           git fetch upstream
           git fetch origin master
 
-      - name: Mirror upstream/master into origin/master
+      - name: Mirror upstream/master into origin/master and origin/main
         run: |
+          git checkout -B master upstream/master
+          git push origin master --force
           git checkout -B main upstream/master
-          git push origin main --force  
+          git push origin main --force
