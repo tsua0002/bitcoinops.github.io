@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -22,12 +23,28 @@ jobs:
       - name: Configure remotes
         run: |
           git remote add upstream https://github.com/bitcoinops/bitcoinops.github.io.git
-          git fetch upstream
-          git fetch origin master
+          git fetch upstream master
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
 
-      - name: Mirror upstream/master into origin/master and origin/main
-        run: |
-          git checkout -B master upstream/master
-          git push origin master --force
-          git checkout -B main upstream/master
-          git push origin main --force
+      - name: Create PR to sync master
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Sync: Update master from upstream"
+          title: "Sync: Update master from upstream"
+          body: "Automated sync from bitcoinops/bitcoinops.github.io master branch"
+          branch: sync-upstream-master
+          base: master
+          delete-branch: true
+
+      - name: Create PR to sync main
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Sync: Update main from upstream"
+          title: "Sync: Update main from upstream"
+          body: "Automated sync from bitcoinops/bitcoinops.github.io master branch"
+          branch: sync-upstream-main
+          base: main
+          delete-branch: true
