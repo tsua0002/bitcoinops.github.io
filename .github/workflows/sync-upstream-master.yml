@@ -20,31 +20,21 @@ jobs:
           ref: automation
           fetch-depth: 0
 
-      - name: Configure remotes
+      - name: Configure git and add upstream
         run: |
           git remote add upstream https://github.com/bitcoinops/bitcoinops.github.io.git
           git fetch upstream master
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
 
-      - name: Create PR to sync master
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Sync: Update master from upstream"
-          title: "Sync: Update master from upstream"
-          body: "Automated sync from bitcoinops/bitcoinops.github.io master branch"
-          branch: sync-upstream-master
-          base: master
-          delete-branch: true
+      - name: Sync and push master branch
+        run: |
+          git checkout master
+          git merge upstream/master --no-edit
+          git push origin master
 
-      - name: Create PR to sync main
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Sync: Update main from upstream"
-          title: "Sync: Update main from upstream"
-          body: "Automated sync from bitcoinops/bitcoinops.github.io master branch"
-          branch: sync-upstream-main
-          base: main
-          delete-branch: true
+      - name: Sync and push main branch
+        run: |
+          git checkout main
+          git merge upstream/master --no-edit
+          git push origin main
