@@ -19,7 +19,6 @@ jobs:
         with:
           ref: automation
           fetch-depth: 0
-          token: ${{ secrets.BYPASS_PAT }}
 
       - name: Configure git and add upstream
         run: |
