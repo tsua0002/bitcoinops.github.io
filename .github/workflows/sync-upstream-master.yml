@@ -30,11 +30,11 @@ jobs:
       - name: Sync and push master branch
         run: |
           git checkout --track origin/master
-          git merge upstream/master --no-edit
+          git rebase upstream/master
           git push origin master
 
       - name: Sync and push main branch
         run: |
           git checkout --track origin/main
-          git merge upstream/master --no-edit
+          git rebase upstream/master
           git push origin main
